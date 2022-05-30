@@ -48,6 +48,8 @@ class Dbdata:
             "family": "'G', 'PG', 'PG-13'",
             "adult": "'R', 'NC-17'"
         }
+        if rating not in rating_parameters:
+            return 'Данные для поиска указаны не корректно'
         connection = self.load_data()
         cursor = connection.cursor()
         sqlite_query = f"""SELECT title, rating, description
@@ -81,51 +83,3 @@ class Dbdata:
                               "description": data[i][1]})
         return data_list
 
-    def colleagues(self, a, b):
-        connection = self.load_data()
-        cursor = connection.cursor()
-        sqlite_query = f"""SELECT `cast`
-                        FROM netflix
-                        WHERE `cast` LIKE '%{a}%' 
-                        AND `cast` LIKE '%{b}%'
-                        """
-        cursor.execute(sqlite_query)
-        data = cursor.fetchall()
-        connection.close()
-
-        data_list = []
-        colleagues_list = []
-
-        for i in range(len(data)):
-            l = data[i][0].split(', ')
-            data_list.extend(l)
-
-        for i in range(len(data_list)):
-            if data_list.count(data_list[i]) > 2:
-                colleagues_list.append(data_list[i])
-
-        total_set = set(colleagues_list)
-
-        total_set.remove(a)
-        total_set.remove(b)
-
-        return total_set
-
-    def search_by_type_year_genre(self, type, year, genre):
-        connection = self.load_data()
-        cursor = connection.cursor()
-        sqlite_query = f"""SELECT title, description
-                        FROM netflix
-                        WHERE listed_in LIKE '%{genre}%' 
-                        AND type = '{type}'
-                        AND release_year = '{year}'
-                        ORDER BY release_year DESC
-                        """
-        cursor.execute(sqlite_query)
-        data = cursor.fetchall()
-        connection.close()
-        data_list = []
-        for i in range(len(data)):
-            data_list.append({"title": data[i][0],
-                              "description": data[i][1]})
-        return data_list
