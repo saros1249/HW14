@@ -2,6 +2,10 @@ import sqlite3
 
 
 def colleagues(actor_1, actor_2):
+    """
+    Поиск коллег для двух актеров, которые снимались совместно более 2-х раз.
+    :return: Множество.
+    """
     connection = sqlite3.connect('netflix.db')
     cursor = connection.cursor()
     sqlite_query = f"""SELECT `cast`
@@ -32,6 +36,10 @@ def colleagues(actor_1, actor_2):
 
 
 def search_by_type_year_genre(type, year, genre):
+    """
+    Поиск по типу, году выхода, жанру.
+    :return: Список словарей.
+    """
     connection = sqlite3.connect('netflix.db')
     cursor = connection.cursor()
     sqlite_query = f"""SELECT title, description

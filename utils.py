@@ -7,9 +7,17 @@ class Dbdata:
         self.path = path
 
     def load_data(self):
+        """
+        Создаёт соединение с БД.
+        """
         return sqlite3.connect(self.path)
 
     def search_by_title(self, search_title):
+        """
+        Поиск по названию фильма
+        :param search_title: Название
+        :return: Словарь.
+        """
         connection = self.load_data()
         cursor = connection.cursor()
         sqlite_query = f"""SELECT title, country, MAX(release_year), listed_in, description
@@ -26,6 +34,12 @@ class Dbdata:
                 "description": data[0][4]}
 
     def search_by_release_years(self, years_min, years_max):
+        """
+        Поиск по диапазону годов выхода фильма.
+        :param years_min:
+        :param years_max:
+        :return: Список словарей.
+        """
         connection = self.load_data()
         cursor = connection.cursor()
         sqlite_query = f"""SELECT title, release_year
@@ -43,6 +57,11 @@ class Dbdata:
         return data_list
 
     def search_by_rating(self, rating):
+        """
+        Поиск по рейтингу фильма.
+        :param rating:
+        :return: Список словарей.
+        """
         rating_parameters = {
             "children": "'G'",
             "family": "'G', 'PG', 'PG-13'",
@@ -67,6 +86,11 @@ class Dbdata:
         return data_list
 
     def top_films_by_genre(self, genre):
+        """
+        Поиск по жанру.
+        :param genre:
+        :return: Список словарей.
+        """
         connection = self.load_data()
         cursor = connection.cursor()
         sqlite_query = f"""SELECT title, description
